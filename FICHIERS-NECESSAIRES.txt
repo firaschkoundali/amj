@@ -1,0 +1,83 @@
+═══════════════════════════════════════════════════════════════
+  FICHIERS NÉCESSAIRES POUR INFINITYFREE
+═══════════════════════════════════════════════════════════════
+
+✅ FICHIERS À UPLOADER SUR LE SERVEUR :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 DOSSIERS :
+   ✓ bin/              - Commandes Symfony
+   ✓ config/            - Configuration Symfony
+   ✓ migrations/        - Migrations de base de données
+   ✓ public/            - Point d'entrée public (index.php)
+   ✓ src/               - Code source de l'application
+   ✓ templates/         - Templates Twig
+   ✓ vendor/            - Dépendances Composer
+   ✓ var/               - Cache et logs (permissions 775)
+
+📄 FICHIERS :
+   ✓ .env               - Variables d'environnement (avec vos infos MySQL)
+   ✓ .htaccess          - Configuration Apache (à la racine)
+   ✓ setup.php          - Script de migration (temporaire)
+   ✓ composer.json      - Dépendances PHP
+   ✓ composer.lock      - Versions verrouillées
+   ✓ symfony.lock       - Verrou Symfony
+   ✓ README.md          - Documentation du projet (optionnel)
+
+═══════════════════════════════════════════════════════════════
+  FICHIERS SUPPRIMÉS (non nécessaires)
+═══════════════════════════════════════════════════════════════
+
+❌ Documentation et guides :
+   - ALTERNATIVES-DEPLOIEMENT.md
+   - CONFIGURATION-RENDER.md
+   - CONFIGURATION-RENDER-PHP.md
+   - DEPLOYMENT-GRATUIT.md
+   - DOCUMENTATION-INFINITYFREE.md
+   - ETAPES-DEPLOIEMENT.md
+   - FIX-POSTGRESQL-VERSION.md
+   - GUIDE-INFINITYFREE.md
+   - GUIDE-RAPIDE-INFINITYFREE.md
+   - GUIDE-RAPIDE-RENDER.md
+   - INSTRUCTIONS-DEPLOIEMENT.txt
+   - PUSH-TO-GITHUB.md
+   - VERIFIER-BASE-DONNEES.md
+
+❌ Configuration autres plateformes :
+   - Dockerfile (Render/Docker)
+   - Procfile (Heroku/Render)
+   - nixpacks.toml (Railway)
+   - render.yaml (Render)
+   - compose.yaml (Docker Compose)
+   - compose.override.yaml (Docker Compose)
+   - prepare-deployment.sh (Linux/Mac)
+
+✅ CONSERVÉ :
+   - prepare-deployment.bat (utile pour Windows)
+   - README.md (documentation du projet)
+
+═══════════════════════════════════════════════════════════════
+  STRUCTURE FINALE SUR LE SERVEUR
+═══════════════════════════════════════════════════════════════
+
+htdocs/
+├── bin/
+├── config/
+├── migrations/
+├── public/
+│   ├── index.php
+│   ├── .htaccess
+│   └── assets/
+├── src/
+├── templates/
+├── vendor/
+├── var/              ← Permissions 775
+├── .env              ← Avec vos infos MySQL
+├── .htaccess         ← À la racine
+├── setup.php         ← Temporaire (à supprimer après)
+├── composer.json
+├── composer.lock
+└── symfony.lock
+
+═══════════════════════════════════════════════════════════════
+
