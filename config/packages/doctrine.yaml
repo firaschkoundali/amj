@@ -4,9 +4,9 @@ doctrine:
 
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
-        # For PostgreSQL on Render, use version 15 (or 16 if available)
-        server_version: '15'
-        driver: 'pdo_pgsql'
+        # Server version will be auto-detected from DATABASE_URL if not specified
+        # For PostgreSQL, add ?serverVersion=15 to DATABASE_URL
+        # For MySQL, add ?serverVersion=8.0.32 to DATABASE_URL
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
