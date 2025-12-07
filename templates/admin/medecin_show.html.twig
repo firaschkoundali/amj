@@ -1,0 +1,191 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails Médecin - AMJ{% endblock %}
+
+{% block admin_content %}
+<div style="padding: 30px;">
+    <!-- Page Header -->
+    <div class="page-header" style="margin-bottom: 30px;">
+        <a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-secondary btn-sm mb-3" style="border-radius: 20px;">
+            <i class="bi bi-arrow-left me-1"></i> Retour au dashboard
+        </a>
+        <h2 style="color: var(--amj-blue); font-weight: 700; margin-bottom: 10px;">Détails du Médecin</h2>
+        <p style="color: #6c757d; margin: 0;">Informations complètes</p>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="admin-card" style="background: #fff; border-radius: 15px; padding: 40px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);">
+                    
+                    <div class="text-center mb-4">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--amj-blue) 0%, var(--amj-red) 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <i class="bi bi-person-fill" style="font-size: 3rem; color: #fff;"></i>
+                        </div>
+                        <h2 style="color: var(--amj-blue); font-weight: 700; margin-bottom: 5px;">{{ medecin.nomComplet }}</h2>
+                        <p style="color: #6c757d; margin: 0;">Médecin inscrit</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.05) 0%, rgba(0, 82, 163, 0.02) 100%); border-left: 4px solid var(--amj-blue); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">Nom</label>
+                                <p style="color: var(--amj-blue); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.nom }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.05) 0%, rgba(0, 82, 163, 0.02) 100%); border-left: 4px solid var(--amj-blue); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">Prénom</label>
+                                <p style="color: var(--amj-blue); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.prenom }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(220, 20, 60, 0.05) 0%, rgba(220, 20, 60, 0.02) 100%); border-left: 4px solid var(--amj-red); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-envelope me-1"></i>Email
+                                </label>
+                                <p style="color: var(--amj-red); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.email }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(220, 20, 60, 0.05) 0%, rgba(220, 20, 60, 0.02) 100%); border-left: 4px solid var(--amj-red); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-telephone me-1"></i>Téléphone
+                                </label>
+                                <p style="color: var(--amj-red); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.telephone }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.05) 0%, rgba(0, 82, 163, 0.02) 100%); border-left: 4px solid var(--amj-blue); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-briefcase me-1"></i>Spécialité
+                                </label>
+                                <p style="color: var(--amj-blue); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.specialite }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.05) 0%, rgba(0, 82, 163, 0.02) 100%); border-left: 4px solid var(--amj-blue); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-geo-alt me-1"></i>Région / Ville
+                                </label>
+                                <p style="color: var(--amj-blue); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.lieuDeTravail }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(220, 20, 60, 0.05) 0%, rgba(220, 20, 60, 0.02) 100%); border-left: 4px solid var(--amj-red); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-tag me-1"></i>Type d'inscription
+                                </label>
+                                <p style="color: var(--amj-red); font-weight: 600; margin: 0; font-size: 1.1rem;">
+                                    {% if medecin.typeInscription %}
+                                        {{ medecin.typeInscriptionLabel }}
+                                    {% else %}
+                                        Non spécifié
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(220, 20, 60, 0.1) 0%, rgba(220, 20, 60, 0.05) 100%); border-left: 4px solid var(--amj-red); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-currency-exchange me-1"></i>Montant
+                                </label>
+                                <p style="color: var(--amj-red); font-weight: 700; margin: 0; font-size: 1.5rem;">
+                                    {% if medecin.montant %}
+                                        {{ medecin.montant }} DT
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.05) 0%, rgba(220, 20, 60, 0.05) 100%); border-left: 4px solid var(--amj-blue); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                                <label style="color: #6c757d; font-size: 0.9rem; margin-bottom: 8px; display: block;">
+                                    <i class="bi bi-calendar-check me-1"></i>Date d'inscription
+                                </label>
+                                <p style="color: var(--amj-blue); font-weight: 600; margin: 0; font-size: 1.1rem;">{{ medecin.dateInscription|date('d/m/Y à H:i') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        {% if medecin.typeInscription == 'medecin' %}
+                            {% set backRoute = 'app_admin_medecins' %}
+                        {% elseif medecin.typeInscription == 'resident' %}
+                            {% set backRoute = 'app_admin_residents' %}
+                        {% else %}
+                            {% set backRoute = 'app_admin_etudiants' %}
+                        {% endif %}
+                        <a href="{{ path(backRoute) }}" class="btn btn-primary" style="background: linear-gradient(135deg, var(--amj-red) 0%, var(--amj-red-light) 100%); border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600;">
+                            <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                        </a>
+                        <a href="{{ path('app_admin_receipt', {'id': medecin.id}) }}" target="_blank" class="btn btn-success ms-3" style="background: linear-gradient(135deg, #28a745 0%, #5cb85c 100%); border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600;">
+                            <i class="bi bi-printer me-2"></i>Imprimer le reçu
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Mobile Responsive Styles for Medecin Show Page */
+@media (max-width: 768px) {
+    div[style*="padding: 30px"] {
+        padding: 20px 15px !important;
+    }
+    
+    .admin-card {
+        padding: 25px 20px !important;
+    }
+    
+    .info-box {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .col-md-6 {
+        margin-bottom: 15px;
+    }
+    
+    .text-center.mt-4 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .text-center.mt-4 .btn {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    div[style*="padding: 30px"] {
+        padding: 15px 10px !important;
+    }
+    
+    .admin-card {
+        padding: 20px 15px !important;
+    }
+    
+    .info-box {
+        padding: 12px !important;
+    }
+    
+    .info-box label {
+        font-size: 0.85rem !important;
+    }
+    
+    .info-box p {
+        font-size: 1rem !important;
+    }
+}
+</style>
+
+{% endblock %}
+

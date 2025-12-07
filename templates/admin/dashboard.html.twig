@@ -1,0 +1,532 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Dashboard Admin - AMJ{% endblock %}
+
+{% block admin_content %}
+<div class="dashboard-container">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Dashboard Administrateur</h1>
+            <p class="dashboard-subtitle">Vue d'ensemble des inscriptions</p>
+        </div>
+        <div class="dashboard-date">
+            <i class="bi bi-calendar3 me-2"></i>
+            <span>{{ "now"|date('d/m/Y') }}</span>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <a href="{{ path('app_admin_medecins') }}" class="stat-card stat-card-blue">
+            <div class="stat-card-content">
+                <div class="stat-card-info">
+                    <div class="stat-card-label">Médecins</div>
+                    <div class="stat-card-value">{{ totalMedecinType }}</div>
+                    <div class="stat-card-trend">
+                        <i class="bi bi-arrow-up-circle me-1"></i>
+                        <span>Voir la liste</span>
+                    </div>
+                </div>
+                <div class="stat-card-icon">
+                    <i class="bi bi-person-badge"></i>
+                </div>
+            </div>
+        </a>
+
+        <a href="{{ path('app_admin_residents') }}" class="stat-card stat-card-red">
+            <div class="stat-card-content">
+                <div class="stat-card-info">
+                    <div class="stat-card-label">Résidents / Internes</div>
+                    <div class="stat-card-value">{{ totalResident }}</div>
+                    <div class="stat-card-trend">
+                        <i class="bi bi-arrow-up-circle me-1"></i>
+                        <span>Voir la liste</span>
+                    </div>
+                </div>
+                <div class="stat-card-icon">
+                    <i class="bi bi-person-check"></i>
+                </div>
+            </div>
+        </a>
+
+        <a href="{{ path('app_admin_etudiants') }}" class="stat-card stat-card-green">
+            <div class="stat-card-content">
+                <div class="stat-card-info">
+                    <div class="stat-card-label">Étudiants</div>
+                    <div class="stat-card-value">{{ totalEtudiant }}</div>
+                    <div class="stat-card-trend">
+                        <i class="bi bi-arrow-up-circle me-1"></i>
+                        <span>Voir la liste</span>
+                    </div>
+                </div>
+                <div class="stat-card-icon">
+                    <i class="bi bi-mortarboard"></i>
+                </div>
+            </div>
+        </a>
+
+        <div class="stat-card stat-card-purple">
+            <div class="stat-card-content">
+                <div class="stat-card-info">
+                    <div class="stat-card-label">Total Inscriptions</div>
+                    <div class="stat-card-value">{{ totalMedecins }}</div>
+                    <div class="stat-card-trend">
+                        <i class="bi bi-graph-up me-1"></i>
+                        <span>Tous types confondus</span>
+                    </div>
+                </div>
+                <div class="stat-card-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+        <h2 class="section-title">
+            <i class="bi bi-lightning-charge-fill me-2"></i>
+            Actions Rapides
+        </h2>
+        <div class="quick-actions-grid">
+            <a href="{{ path('app_admin_medecins') }}" class="quick-action-card quick-action-blue">
+                <div class="quick-action-icon">
+                    <i class="bi bi-person-badge"></i>
+                </div>
+                <h3>Médecins</h3>
+                <p>Gérer les inscriptions des médecins</p>
+                <div class="quick-action-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{{ path('app_admin_residents') }}" class="quick-action-card quick-action-red">
+                <div class="quick-action-icon">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <h3>Résidents / Internes</h3>
+                <p>Gérer les inscriptions des résidents</p>
+                <div class="quick-action-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{{ path('app_admin_etudiants') }}" class="quick-action-card quick-action-green">
+                <div class="quick-action-icon">
+                    <i class="bi bi-mortarboard"></i>
+                </div>
+                <h3>Étudiants</h3>
+                <p>Gérer les inscriptions des étudiants</p>
+                <div class="quick-action-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-container {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.dashboard-title {
+    color: var(--amj-blue);
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin: 0 0 8px 0;
+}
+
+.dashboard-subtitle {
+    color: #6c757d;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.dashboard-date {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(0, 82, 163, 0.1) 0%, rgba(220, 20, 60, 0.1) 100%);
+    border-radius: 25px;
+    color: var(--amj-blue);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--amj-blue) 0%, var(--amj-red) 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-card-info {
+    flex: 1;
+}
+
+.stat-card-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card-value {
+    color: #2c2c2c;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.stat-card-trend {
+    display: flex;
+    align-items: center;
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+.stat-card-icon {
+    font-size: 4rem;
+    opacity: 0.15;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-card-icon {
+    opacity: 0.25;
+    transform: scale(1.1);
+}
+
+.stat-card-blue {
+    border-left: 4px solid var(--amj-blue);
+}
+
+.stat-card-blue .stat-card-value {
+    color: var(--amj-blue);
+}
+
+.stat-card-red {
+    border-left: 4px solid var(--amj-red);
+}
+
+.stat-card-red .stat-card-value {
+    color: var(--amj-red);
+}
+
+.stat-card-green {
+    border-left: 4px solid #28a745;
+}
+
+.stat-card-green .stat-card-value {
+    color: #28a745;
+}
+
+.stat-card-purple {
+    border-left: 4px solid #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.stat-card-purple .stat-card-value {
+    color: #667eea;
+}
+
+/* Quick Actions */
+.quick-actions-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    color: var(--amj-blue);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.quick-action-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.quick-action-card:hover::before {
+    left: 100%;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    border-color: var(--amj-blue);
+}
+
+.quick-action-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.quick-action-blue {
+    background: linear-gradient(135deg, rgba(0, 82, 163, 0.08) 0%, rgba(0, 82, 163, 0.03) 100%);
+}
+
+.quick-action-blue .quick-action-icon {
+    background: linear-gradient(135deg, var(--amj-blue) 0%, var(--amj-blue-light) 100%);
+    color: #fff;
+}
+
+.quick-action-blue:hover {
+    border-color: var(--amj-blue);
+}
+
+.quick-action-blue:hover .quick-action-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.quick-action-red {
+    background: linear-gradient(135deg, rgba(220, 20, 60, 0.08) 0%, rgba(220, 20, 60, 0.03) 100%);
+}
+
+.quick-action-red .quick-action-icon {
+    background: linear-gradient(135deg, var(--amj-red) 0%, var(--amj-red-light) 100%);
+    color: #fff;
+}
+
+.quick-action-red:hover {
+    border-color: var(--amj-red);
+}
+
+.quick-action-red:hover .quick-action-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.quick-action-green {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.08) 0%, rgba(40, 167, 69, 0.03) 100%);
+}
+
+.quick-action-green .quick-action-icon {
+    background: linear-gradient(135deg, #28a745 0%, #5cb85c 100%);
+    color: #fff;
+}
+
+.quick-action-green:hover {
+    border-color: #28a745;
+}
+
+.quick-action-green:hover .quick-action-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.quick-action-card h3 {
+    color: #2c2c2c;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.quick-action-card p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.quick-action-arrow {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #ddd;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.quick-action-card:hover .quick-action-arrow {
+    color: var(--amj-blue);
+    transform: translateX(5px);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 20px 15px;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .dashboard-title {
+        font-size: 1.8rem;
+    }
+    
+    .dashboard-date {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 25px;
+    }
+    
+    .stat-card-value {
+        font-size: 2.2rem;
+    }
+    
+    .stat-card-icon {
+        font-size: 3rem;
+    }
+    
+    .quick-actions-section {
+        padding: 25px 20px;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .quick-action-card {
+        padding: 25px;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-container {
+        padding: 15px 10px;
+    }
+    
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-card-value {
+        font-size: 2rem;
+    }
+    
+    .stat-card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .quick-action-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .quick-action-card h3 {
+        font-size: 1.1rem;
+    }
+}
+</style>
+{% endblock %}

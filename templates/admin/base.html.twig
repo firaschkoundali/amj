@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>{% block title %}Admin AMJ{% endblock %}</title>
+    
+    <!-- Vendor CSS Files -->
+    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    
+    <!-- Main CSS File -->
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    
+    {% block stylesheets %}{% endblock %}
+</head>
+<body style="background: #f8f9fa;">
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+    <i class="bi bi-list"></i>
+</button>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <img src="{{ asset('assets/img/logo.png') }}" alt="AMJ Logo" style="max-height: 50px; margin-bottom: 10px;">
+            <h5 style="color: #fff; margin: 0; font-weight: 700;">Admin AMJ</h5>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="{{ path('app_admin_dashboard') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ path('app_admin_medecins') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_medecins' ? 'active' : '' }}">
+                <i class="bi bi-person-badge"></i>
+                <span>Médecins</span>
+            </a>
+            <a href="{{ path('app_admin_residents') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_residents' ? 'active' : '' }}">
+                <i class="bi bi-person-check"></i>
+                <span>Résidents / Internes</span>
+            </a>
+            <a href="{{ path('app_admin_etudiants') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_etudiants' ? 'active' : '' }}">
+                <i class="bi bi-mortarboard"></i>
+                <span>Étudiants</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <i class="bi bi-person-circle"></i>
+                <span>{{ app.user.email }}</span>
+            </div>
+            <a href="{{ path('app_logout') }}" class="logout-btn">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Déconnexion</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        {% block admin_content %}{% endblock %}
+    </main>
+</div>
+
+<style>
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, var(--amj-blue) 0%, var(--amj-blue-light) 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 25px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 20px 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-right: 12px;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-left-color: var(--amj-red);
+    padding-left: 24px;
+}
+
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-left-color: var(--amj-red);
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+}
+
+.user-info i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(220, 20, 60, 0.2);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(220, 20, 60, 0.3);
+}
+
+.logout-btn:hover {
+    background: rgba(220, 20, 60, 0.3);
+    transform: translateX(5px);
+}
+
+.logout-btn i {
+    margin-right: 10px;
+}
+
+/* Main Content */
+.admin-main {
+    flex: 1;
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: var(--amj-blue);
+    color: #fff;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 82, 163, 0.3);
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: var(--amj-red);
+    transform: scale(1.05);
+}
+
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .admin-main {
+        margin-left: 0;
+        padding-top: 80px;
+    }
+    
+    .sidebar-header {
+        padding: 20px 15px;
+    }
+    
+    .sidebar-header h5 {
+        font-size: 1rem;
+    }
+    
+    .nav-item {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .nav-item i {
+        font-size: 18px;
+        margin-right: 10px;
+    }
+}
+</style>
+
+<!-- Vendor JS Files -->
+<script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- Main JS File -->
+<script src="{{ asset('assets/js/main.js') }}"></script>
+
+<script>
+// Mobile menu toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const adminSidebar = document.getElementById('adminSidebar');
+const mobileOverlay = document.getElementById('mobileOverlay');
+
+if (mobileMenuToggle && adminSidebar && mobileOverlay) {
+    mobileMenuToggle.addEventListener('click', function() {
+        adminSidebar.classList.toggle('open');
+        mobileOverlay.classList.toggle('active');
+    });
+    
+    mobileOverlay.addEventListener('click', function() {
+        adminSidebar.classList.remove('open');
+        mobileOverlay.classList.remove('active');
+    });
+    
+    // Close menu when clicking on a nav item (mobile)
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                adminSidebar.classList.remove('open');
+                mobileOverlay.classList.remove('active');
+            }
+        });
+    });
+}
+</script>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>
+

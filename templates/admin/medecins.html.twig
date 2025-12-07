@@ -1,0 +1,332 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ typeLabel }} - Admin AMJ{% endblock %}
+
+{% block admin_content %}
+<div style="padding: 30px;">
+    <!-- Page Header -->
+    <div class="page-header" style="margin-bottom: 30px;">
+        <h2 style="color: var(--amj-blue); font-weight: 700; margin-bottom: 10px;">
+            <i class="bi bi-{{ type == 'medecin' ? 'person-badge' : (type == 'resident' ? 'person-check' : 'mortarboard') }} me-2"></i>
+            {{ typeLabel }}
+        </h2>
+        <p style="color: #6c757d; margin: 0;">Total : <strong>{{ total }}</strong> inscription(s)</p>
+    </div>
+
+    <!-- Search Card -->
+    <div class="admin-card" style="background: #fff; border-radius: 15px; padding: 25px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); margin-bottom: 30px;">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-10">
+                <label for="searchInput" class="form-label" style="color: var(--amj-blue); font-weight: 600; margin-bottom: 10px;">
+                    <i class="bi bi-search me-2"></i>Rechercher par nom ou prénom
+                </label>
+                <input type="text" class="form-control" id="searchInput" value="{{ search }}" placeholder="Entrez le nom ou le prénom..." style="border: 2px solid #e0e0e0; border-radius: 10px; padding: 12px 15px; font-size: 1rem;">
+                <div id="searchResultsCount" class="mt-2" style="color: #6c757d; font-size: 0.9rem; display: none;">
+                    <span id="resultsCount">0</span> résultat(s) trouvé(s)
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="clearSearch" class="btn btn-outline-secondary w-100" style="padding: 12px; border-radius: 10px; font-weight: 600; display: none;">
+                    <i class="bi bi-x-circle me-2"></i>Effacer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medecins List -->
+    <div class="admin-card" style="background: #fff; border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);">
+        <div id="loadingIndicator" style="display: none; text-align: center; padding: 20px;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-2" style="color: #6c757d;">Recherche en cours...</p>
+        </div>
+        
+        <div id="medecinsTableContainer">
+            {% if medecins|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover" style="margin: 0;">
+                        <thead style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.1) 0%, rgba(220, 20, 60, 0.1) 100%);">
+                            <tr>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">#</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Nom & Prénom</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Email</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Téléphone</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Spécialité</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Région</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Montant</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Date</th>
+                                <th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medecinsTableBody">
+                            {% for medecin in medecins %}
+                                <tr style="border-bottom: 1px solid #f0f0f0; transition: all 0.3s ease;">
+                                    <td style="padding: 15px; color: #6c757d;">{{ loop.index }}</td>
+                                    <td style="padding: 15px;">
+                                        <strong style="color: var(--amj-blue);">{{ medecin.nomComplet }}</strong>
+                                    </td>
+                                    <td style="padding: 15px; color: #6c757d;">
+                                        <i class="bi bi-envelope me-1"></i>{{ medecin.email }}
+                                    </td>
+                                    <td style="padding: 15px; color: #6c757d;">
+                                        <i class="bi bi-telephone me-1"></i>{{ medecin.telephone }}
+                                    </td>
+                                    <td style="padding: 15px;">
+                                        <span class="badge" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.1) 0%, rgba(0, 82, 163, 0.05) 100%); color: var(--amj-blue); padding: 6px 12px; border-radius: 20px; font-weight: 500;">
+                                            {{ medecin.specialite }}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 15px; color: #6c757d;">
+                                        <i class="bi bi-geo-alt me-1"></i>{{ medecin.lieuDeTravail }}
+                                    </td>
+                                    <td style="padding: 15px;">
+                                        <strong style="color: var(--amj-red); font-size: 1.1rem;">{{ medecin.montant }} DT</strong>
+                                    </td>
+                                    <td style="padding: 15px; color: #6c757d; font-size: 0.9rem;">
+                                        {{ medecin.dateInscription|date('d/m/Y H:i') }}
+                                    </td>
+                                    <td style="padding: 15px;">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('app_admin_medecin_show', {'id': medecin.id}) }}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px 0 0 8px; padding: 6px 12px;" title="Voir les détails">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{{ path('app_admin_receipt', {'id': medecin.id}) }}" target="_blank" class="btn btn-sm btn-outline-success" style="border-radius: 0 8px 8px 0; padding: 6px 12px;" title="Imprimer le reçu">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5" id="emptyState">
+                    <i class="bi bi-inbox" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+                    <h4 style="color: #6c757d; margin-bottom: 10px;">Aucun résultat trouvé</h4>
+                    <p style="color: #999;">{% if search %}Essayez une autre recherche{% else %}Aucune inscription de ce type pour le moment{% endif %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.table tbody tr:hover {
+    background: rgba(0, 82, 163, 0.03);
+    transform: scale(1.01);
+}
+
+@media (max-width: 768px) {
+    div[style*="padding: 30px"] {
+        padding: 20px 15px !important;
+    }
+    
+    .admin-card {
+        padding: 20px 15px !important;
+    }
+    
+    .table-responsive {
+        font-size: 0.85rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table {
+        min-width: 800px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 10px 8px !important;
+        white-space: nowrap;
+    }
+    
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        min-width: 150px;
+    }
+    
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        min-width: 180px;
+    }
+    
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .btn-group .btn {
+        border-radius: 8px !important;
+        width: 100%;
+    }
+    
+    .page-header {
+        margin-bottom: 20px !important;
+    }
+    
+    .page-header h2 {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    div[style*="padding: 30px"] {
+        padding: 15px 10px !important;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 5px !important;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        padding: 4px 8px !important;
+    }
+}
+</style>
+
+<script>
+let searchTimeout;
+const searchInput = document.getElementById('searchInput');
+const clearSearchBtn = document.getElementById('clearSearch');
+const medecinsTableBody = document.getElementById('medecinsTableBody');
+const loadingIndicator = document.getElementById('loadingIndicator');
+const resultsCount = document.getElementById('resultsCount');
+const searchResultsCount = document.getElementById('searchResultsCount');
+const emptyState = document.getElementById('emptyState');
+const medecinsTableContainer = document.getElementById('medecinsTableContainer');
+
+const currentType = '{{ type }}';
+const apiUrl = '{{ path('app_admin_api_search') }}';
+
+// Recherche dynamique
+searchInput.addEventListener('input', function() {
+    const query = this.value.trim();
+    
+    clearTimeout(searchTimeout);
+    
+    if (query.length === 0) {
+        clearSearch();
+        return;
+    }
+    
+    // Afficher le bouton effacer
+    clearSearchBtn.style.display = 'block';
+    
+    // Délai de 300ms avant de lancer la recherche
+    searchTimeout = setTimeout(() => {
+        performSearch(query);
+    }, 300);
+});
+
+// Bouton effacer
+clearSearchBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    clearSearch();
+});
+
+function clearSearch() {
+    clearSearchBtn.style.display = 'none';
+    searchResultsCount.style.display = 'none';
+    // Recharger la page pour afficher tous les résultats
+    window.location.href = window.location.pathname;
+}
+
+function performSearch(query) {
+    if (query.length < 2) {
+        return;
+    }
+    
+    // Afficher le loader
+    loadingIndicator.style.display = 'block';
+    medecinsTableContainer.style.opacity = '0.5';
+    
+    // Appel API
+    fetch(`${apiUrl}?q=${encodeURIComponent(query)}&type=${currentType}`)
+        .then(response => response.json())
+        .then(data => {
+            loadingIndicator.style.display = 'none';
+            medecinsTableContainer.style.opacity = '1';
+            
+            if (data.medecins && data.medecins.length > 0) {
+                displayResults(data.medecins);
+                resultsCount.textContent = data.medecins.length;
+                searchResultsCount.style.display = 'block';
+                if (emptyState) emptyState.style.display = 'none';
+            } else {
+                displayEmptyState();
+                resultsCount.textContent = '0';
+                searchResultsCount.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la recherche:', error);
+            loadingIndicator.style.display = 'none';
+            medecinsTableContainer.style.opacity = '1';
+        });
+}
+
+function displayResults(medecins) {
+    const showUrl = '{{ path('app_admin_medecin_show', {'id': 0}) }}'.replace('0', '');
+    const receiptUrl = '{{ path('app_admin_receipt', {'id': 0}) }}'.replace('0', '');
+    
+    let html = '<div class="table-responsive"><table class="table table-hover" style="margin: 0;"><thead style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.1) 0%, rgba(220, 20, 60, 0.1) 100%);"><tr>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">#</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Nom & Prénom</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Email</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Téléphone</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Spécialité</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Région</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Montant</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Date</th>';
+    html += '<th style="color: var(--amj-blue); font-weight: 600; padding: 15px; border: none;">Actions</th>';
+    html += '</tr></thead><tbody>';
+    
+    medecins.forEach((medecin, index) => {
+        html += `<tr style="border-bottom: 1px solid #f0f0f0; transition: all 0.3s ease;">
+            <td style="padding: 15px; color: #6c757d;">${index + 1}</td>
+            <td style="padding: 15px;"><strong style="color: var(--amj-blue);">${medecin.nomComplet}</strong></td>
+            <td style="padding: 15px; color: #6c757d;"><i class="bi bi-envelope me-1"></i>${medecin.email}</td>
+            <td style="padding: 15px; color: #6c757d;"><i class="bi bi-telephone me-1"></i>${medecin.telephone}</td>
+            <td style="padding: 15px;"><span class="badge" style="background: linear-gradient(135deg, rgba(0, 82, 163, 0.1) 0%, rgba(0, 82, 163, 0.05) 100%); color: var(--amj-blue); padding: 6px 12px; border-radius: 20px; font-weight: 500;">${medecin.specialite}</span></td>
+            <td style="padding: 15px; color: #6c757d;"><i class="bi bi-geo-alt me-1"></i>${medecin.lieuDeTravail}</td>
+            <td style="padding: 15px;"><strong style="color: var(--amj-red); font-size: 1.1rem;">${medecin.montant} DT</strong></td>
+            <td style="padding: 15px; color: #6c757d; font-size: 0.9rem;">${medecin.dateInscription}</td>
+            <td style="padding: 15px;">
+                <div class="btn-group" role="group">
+                    <a href="${showUrl}${medecin.id}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px 0 0 8px; padding: 6px 12px;" title="Voir les détails">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="${receiptUrl}${medecin.id}" target="_blank" class="btn btn-sm btn-outline-success" style="border-radius: 0 8px 8px 0; padding: 6px 12px;" title="Imprimer le reçu">
+                        <i class="bi bi-printer"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>`;
+    });
+    
+    html += '</tbody></table></div>';
+    medecinsTableContainer.innerHTML = html;
+}
+
+function displayEmptyState() {
+    medecinsTableContainer.innerHTML = `
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+            <h4 style="color: #6c757d; margin-bottom: 10px;">Aucun résultat trouvé</h4>
+            <p style="color: #999;">Essayez une autre recherche</p>
+        </div>
+    `;
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reçu de Paiement - AMJ - Payé</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .receipt-page {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+        }
+
+        .receipt-page {
+            width: 210mm;
+            min-height: 297mm;
+            max-height: 297mm;
+            background: white;
+            margin: 0 auto;
+            padding: 15mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid #0052A3;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .receipt-header img {
+            max-height: 50px;
+        }
+
+        .receipt-header-right {
+            text-align: right;
+        }
+
+        .receipt-header h1 {
+            color: #0052A3;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        .receipt-header .subtitle {
+            color: #666;
+            font-size: 12px;
+            margin: 3px 0;
+            line-height: 1.3;
+        }
+
+        .receipt-header .receipt-number {
+            color: #DC143C;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Two columns layout */
+        .receipt-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-section {
+            margin-bottom: 15px;
+        }
+
+        .receipt-section h2 {
+            color: #0052A3;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #0052A3;
+            text-transform: uppercase;
+        }
+
+        .info-item {
+            margin-bottom: 8px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .info-item .label {
+            color: #666;
+            font-weight: 500;
+            display: inline-block;
+            width: 110px;
+        }
+
+        .info-item .value {
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Payment Details */
+        .payment-section {
+            background: #f8f9fa;
+            border: 2px solid #0052A3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .payment-section h2 {
+            color: #0052A3;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .payment-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px;
+        }
+
+        .payment-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-item .label {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .payment-item .value {
+            color: #000;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .total-amount {
+            background: linear-gradient(135deg, #0052A3 0%, #3378C4 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .total-amount .label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .total-amount .amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .total-amount .currency {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .receipt-footer {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .receipt-footer .organization {
+            font-weight: bold;
+            color: #0052A3;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .receipt-footer .contact {
+            margin: 3px 0;
+            font-size: 11px;
+        }
+
+        .receipt-footer .note {
+            margin-top: 12px;
+            padding: 8px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+            font-size: 10px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        /* Signature section */
+        .signature-section {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .signature-box {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #ddd;
+        }
+
+        .signature-box .label {
+            color: #666;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        /* Print button */
+        .print-actions {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #DC143C 0%, #FF4569 100%);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-back {
+            background: white;
+            color: #0052A3;
+            border: 2px solid #0052A3;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #0052A3;
+            color: white;
+        }
+
+        @media screen and (max-width: 768px) {
+            .receipt-page {
+                width: 100%;
+                padding: 10mm;
+                min-height: auto;
+                max-height: none;
+            }
+            
+            .receipt-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .receipt-header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .receipt-header h1 {
+                font-size: 18px !important;
+            }
+            
+            .receipt-header .subtitle {
+                font-size: 10px !important;
+            }
+            
+            .receipt-body {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .receipt-section h2 {
+                font-size: 12px !important;
+            }
+            
+            .info-item {
+                font-size: 11px !important;
+            }
+            
+            .info-item .label {
+                width: 100px;
+                font-size: 11px;
+            }
+            
+            .payment-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .total-amount .amount {
+                font-size: 24px !important;
+            }
+            
+            .signature-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .print-actions {
+                margin: 20px 0;
+            }
+            
+            .btn-print,
+            .btn-back {
+                width: 100%;
+                margin-left: 0 !important;
+                margin-bottom: 10px;
+            }
+        }
+        
+        @media screen and (max-width: 576px) {
+            .receipt-page {
+                padding: 8mm;
+            }
+            
+            .receipt-header h1 {
+                font-size: 16px !important;
+            }
+            
+            .receipt-number {
+                font-size: 12px !important;
+            }
+            
+            .total-amount .amount {
+                font-size: 20px !important;
+            }
+            
+            .receipt-footer {
+                font-size: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-page">
+        <!-- Header -->
+        <div class="receipt-header">
+            <div class="receipt-header-left">
+                <img src="{{ asset('assets/img/logo.png') }}" alt="AMJ Logo">
+                <div>
+                    <h1>REÇU DE PAIEMENT</h1>
+                    <div class="subtitle">16èmes Journées Médicales de l'AMJ</div>
+                    <div class="subtitle">7 et 8 Février 2026 - Hôtel Palm Azur, Djerba</div>
+                </div>
+            </div>
+            <div class="receipt-header-right">
+                <div class="receipt-number">N° {{ "%06d"|format(medecin.id) }}</div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="receipt-body">
+            <!-- Left Column: Participant Info -->
+            <div>
+                <div class="receipt-section">
+                    <h2>Informations du Participant</h2>
+                    <div class="info-item">
+                        <span class="label">Nom complet :</span>
+                        <span class="value">{{ medecin.nomComplet }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Email :</span>
+                        <span class="value">{{ medecin.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Téléphone :</span>
+                        <span class="value">{{ medecin.telephone }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Spécialité :</span>
+                        <span class="value">{{ medecin.specialite }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Région / Ville :</span>
+                        <span class="value">{{ medecin.lieuDeTravail }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Registration Info -->
+            <div>
+                <div class="receipt-section">
+                    <h2>Détails de l'Inscription</h2>
+                    <div class="info-item">
+                        <span class="label">Type :</span>
+                        <span class="value">{{ medecin.typeInscriptionLabel }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Date d'inscription :</span>
+                        <span class="value">{{ medecin.dateInscription|date('d/m/Y') }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Heure :</span>
+                        <span class="value">{{ medecin.dateInscription|date('H:i') }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Numéro :</span>
+                        <span class="value">#{{ "%06d"|format(medecin.id) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="payment-section">
+            <h2>Détails du Paiement</h2>
+            <div class="payment-details">
+                <div class="payment-item">
+                    <span class="label">Type d'inscription :</span>
+                    <span class="value">{{ medecin.typeInscriptionLabel }}</span>
+                </div>
+                <div class="payment-item">
+                    <span class="label">Date du paiement :</span>
+                    <span class="value">{{ "now"|date('d/m/Y') }}</span>
+                </div>
+                <div class="payment-item">
+                    <span class="label">Mode de paiement :</span>
+                    <span class="value">Espèces</span>
+                </div>
+                <div class="payment-item">
+                    <span class="label">Statut :</span>
+                    <span class="value" style="color: #28a745; font-weight: bold;">✓ PAYÉ</span>
+                </div>
+            </div>
+
+            <div class="total-amount">
+                <div class="label">MONTANT REÇU</div>
+                <div class="amount">{{ medecin.montant }} DT</div>
+                <div class="currency">Dinars Tunisiens</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="receipt-footer">
+            <div class="organization">Amicale des Médecins de Jerba (AMJ)</div>
+            <div class="contact">Hôtel Palm Azur, Djerba, Tunisie</div>
+            <div class="contact">Email: contact@amj-djerba.tn | Tél: +216 XX XXX XXX</div>
+            
+            <div class="note">
+                <strong>Note importante :</strong> Ce reçu confirme que le paiement de votre inscription a été effectué avec succès. 
+                Veuillez conserver ce document comme preuve de paiement. 
+                Présentez-vous au congrès avec ce reçu pour accéder aux conférences.
+            </div>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature-box">
+                <div class="label">Signature du participant</div>
+            </div>
+            <div class="signature-box">
+                <div class="label">Cachet et signature AMJ</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Actions -->
+    <div class="print-actions no-print">
+        <button onclick="window.print()" class="btn-print">
+            <i class="bi bi-printer"></i> Imprimer le reçu
+        </button>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_admin_dashboard') }}" class="btn-back">
+                <i class="bi bi-arrow-left"></i> Retour au dashboard
+            </a>
+        {% else %}
+            <a href="{{ path('app_home') }}" class="btn-back">
+                <i class="bi bi-house"></i> Retour à l'accueil
+            </a>
+        {% endif %}
+    </div>
+
+    <script>
+        // Auto-print option (uncomment if needed)
+        // window.onload = function() {
+        //     window.print();
+        // }
+    </script>
+</body>
+</html>

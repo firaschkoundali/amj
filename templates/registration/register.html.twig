@@ -1,0 +1,900 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - 16èmes Journées Médicales de l'AMJ{% endblock %}
+
+{% block stylesheets %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    .registration-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0052A3 0%, #3378C4 50%, #DC143C 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        padding: 2rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    .registration-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .registration-container {
+        max-width: 900px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        margin: 0 auto;
+    }
+
+    .registration-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        padding: 3rem;
+        animation: slideUp 0.6s ease-out;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .registration-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #0052A3, #3378C4, #DC143C, #FF4569);
+        background-size: 200% 100%;
+        animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .registration-form {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .registration-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .registration-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #0052A3 0%, #DC143C 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+
+    .registration-header p {
+        color: #6b7280;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        animation: slideIn 0.4s ease-out;
+        font-weight: 500;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border-color: #10b981;
+        color: #065f46;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+        border-color: #f59e0b;
+        color: #92400e;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+        border-color: #ef4444;
+        color: #991b1b;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        letter-spacing: 0.3px;
+    }
+
+    .form-label .required {
+        color: #ef4444;
+        margin-left: 2px;
+    }
+
+    .form-control {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.875rem 1.25rem;
+        font-size: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        background: #ffffff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #111827;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #0052A3;
+        box-shadow: 0 0 0 4px rgba(0, 82, 163, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .form-control.is-invalid {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.05);
+    }
+
+    .form-control.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+
+    .invalid-feedback {
+        display: block;
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        font-weight: 500;
+        animation: shake 0.4s ease-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .form-text {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, rgba(0, 82, 163, 0.05) 0%, rgba(220, 20, 60, 0.05) 100%);
+        border-radius: 8px;
+        border-left: 3px solid #0052A3;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0052A3 0%, #DC143C 100%);
+        color: white;
+        box-shadow: 0 10px 25px rgba(0, 82, 163, 0.3);
+        flex: 1;
+        min-width: 0;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(0, 82, 163, 0.4);
+        background: linear-gradient(135deg, #DC143C 0%, #0052A3 100%);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #0052A3;
+        border: 2px solid #0052A3;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .btn-secondary:hover {
+        background: #0052A3;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 82, 163, 0.2);
+    }
+
+    .security-note {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: rgba(0, 82, 163, 0.05);
+        border-radius: 12px;
+        color: #6b7280;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .security-note i {
+        color: #0052A3;
+        font-size: 1.1rem;
+    }
+
+    /* Success Modal */
+    .success-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .success-modal-content {
+        background: white;
+        border-radius: 24px;
+        padding: 3rem;
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .success-modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #0052A3, #3378C4, #DC143C, #FF4569);
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .success-icon i {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .success-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #0052A3 0%, #DC143C 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .success-message {
+        color: #374151;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .success-message strong {
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, rgba(0, 82, 163, 0.1) 0%, rgba(220, 20, 60, 0.1) 100%);
+        border-radius: 8px;
+        color: #0052A3;
+        font-size: 1.1rem;
+    }
+
+    .success-info {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .btn-success-modal {
+        background: linear-gradient(135deg, #0052A3 0%, #DC143C 100%);
+        color: white;
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0, 82, 163, 0.3);
+    }
+
+    .btn-success-modal:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(0, 82, 163, 0.4);
+        background: linear-gradient(135deg, #DC143C 0%, #0052A3 100%);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .registration-wrapper {
+            padding: 1rem 0.75rem;
+            min-height: auto;
+            align-items: flex-start;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .registration-container {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .registration-card {
+            padding: 2rem 1.5rem;
+            border-radius: 20px;
+            margin: 0;
+        }
+
+        .registration-header {
+            margin-bottom: 2rem;
+        }
+
+        .registration-header h1 {
+            font-size: 1.75rem;
+            line-height: 1.3;
+        }
+
+        .registration-header p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            width: 100%;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .security-note {
+            font-size: 0.85rem;
+            padding: 0.875rem;
+            margin-top: 1.5rem;
+        }
+
+        .success-modal-content {
+            padding: 2rem 1.5rem;
+            margin: 1rem;
+            max-width: calc(100% - 2rem);
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+        }
+
+        .alert {
+            padding: 0.875rem 1.25rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .registration-wrapper {
+            padding: 0.75rem 0.5rem;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .registration-card {
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+        }
+
+        .registration-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .registration-header h1 {
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .registration-header p {
+            font-size: 0.875rem;
+        }
+
+        .form-grid {
+            gap: 0.875rem;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            border-radius: 10px;
+        }
+
+        .form-text {
+            font-size: 0.8rem;
+            padding: 0.625rem;
+        }
+
+        .form-actions {
+            gap: 0.625rem;
+            margin-top: 1.25rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.25rem;
+            font-size: 0.9rem;
+            border-radius: 10px;
+        }
+
+        .security-note {
+            font-size: 0.8rem;
+            padding: 0.75rem;
+            flex-direction: column;
+            text-align: center;
+            gap: 0.375rem;
+        }
+
+        .success-modal-content {
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            margin: 0.5rem;
+            max-width: calc(100% - 1rem);
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .success-icon i {
+            font-size: 2rem;
+        }
+
+        .success-title {
+            font-size: 1.25rem;
+        }
+
+        .success-message {
+            font-size: 0.9rem;
+        }
+
+        .success-info {
+            font-size: 0.85rem;
+        }
+
+        .btn-success-modal {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .registration-wrapper {
+            padding: 0.5rem;
+        }
+
+        .registration-card {
+            padding: 1.25rem 0.875rem;
+        }
+
+        .registration-header h1 {
+            font-size: 1.35rem;
+        }
+
+        .form-control {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+    }
+
+    /* Loading state */
+    .btn.loading {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .btn.loading::after {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="registration-wrapper">
+    <div class="registration-container">
+        <div class="registration-card">
+            <div class="registration-header">
+                <h1>Inscription au Congrès</h1>
+                <p>Rejoignez-nous pour les 16èmes Journées Médicales de l'AMJ</p>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-x-circle-fill"></i>
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+
+            {% for registrationId in app.flashes('success_registration') %}
+                <div id="successModal" class="success-modal-overlay">
+                    <div class="success-modal-content">
+                        <div class="success-icon">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <h2 class="success-title">Inscription réussie !</h2>
+                        <p class="success-message">
+                            Votre inscription a été enregistrée avec succès.<br>
+                            <strong>Numéro d'inscription : #{{ "%06d"|format(registrationId) }}</strong>
+                        </p>
+                        <p class="success-info">
+                            Vous recevrez un email de confirmation sous peu.<br>
+                            Le reçu de paiement sera disponible lors de votre arrivée au congrès.
+                        </p>
+                        <button onclick="closeSuccessModal()" class="btn-success-modal">
+                            <i class="bi bi-check-circle me-2"></i>Parfait, merci !
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {{ form_start(form, {'attr': {'class': 'registration-form', 'novalidate': 'novalidate'}}) }}
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control' ~ (form.nom.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control' ~ (form.prenom.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.prenom) }}
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.telephone, {'attr': {'class': 'form-control' ~ (form.telephone.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.telephone) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.specialite, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.specialite, {'attr': {'class': 'form-control' ~ (form.specialite.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.specialite) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.lieuDeTravail, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.lieuDeTravail, {'attr': {'class': 'form-control' ~ (form.lieuDeTravail.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.lieuDeTravail) }}
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    {{ form_label(form.typeInscription, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.typeInscription, {'attr': {'class': 'form-control' ~ (form.typeInscription.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    {{ form_errors(form.typeInscription) }}
+                    <small class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>Tarifs :</strong> Médecin (200 DT) | Résident/Interne (100 DT) | Étudiant (50 DT)
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i>
+                    S'inscrire
+                </button>
+                <a href="{{ path('app_home') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                    Retour
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+
+            <div class="security-note">
+                <i class="bi bi-shield-check"></i>
+                <span>Vos données sont sécurisées et ne seront utilisées que pour l'organisation du congrès.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function closeSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease forwards';
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        const form = document.querySelector('.registration-form');
+        if (form) {
+            form.reset();
+        }
+    }
+
+    // Close modal on overlay click
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('successModal');
+        if (modal && e.target === modal) {
+            closeSuccessModal();
+        }
+    });
+
+    // Prevent form submission on Enter key in non-submit inputs
+    const form = document.querySelector('.registration-form');
+    if (form) {
+        form.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'BUTTON' && e.target.type !== 'submit') {
+                const inputs = Array.from(form.querySelectorAll('input, select, textarea'));
+                const currentIndex = inputs.indexOf(e.target);
+                if (currentIndex < inputs.length - 1) {
+                    e.preventDefault();
+                    inputs[currentIndex + 1].focus();
+                }
+            }
+        });
+
+        // Add loading state on submit
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.classList.add('loading');
+            }
+        });
+    }
+
+    // Add focus animations
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.01)';
+        });
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    });
+});
+
+// Add fadeOut animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}
