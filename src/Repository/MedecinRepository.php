@@ -18,13 +18,14 @@ class MedecinRepository extends ServiceEntityRepository
 
     /**
      * Recherche de médecins par nom et prénom
+     * Compatible MySQL et PostgreSQL
      */
     public function search(string $query, ?string $type = null): array
     {
         $qb = $this->createQueryBuilder('m')
             ->where('m.nom LIKE :query')
             ->orWhere('m.prenom LIKE :query')
-            ->orWhere('CONCAT(m.prenom, \' \', m.nom) LIKE :query')
+            ->orWhere('m.prenom LIKE :query OR m.nom LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->orderBy('m.dateInscription', 'DESC');
 
@@ -47,7 +48,7 @@ class MedecinRepository extends ServiceEntityRepository
             ->orderBy('m.dateInscription', 'DESC');
 
         if ($search) {
-            $qb->andWhere('(m.nom LIKE :query OR m.prenom LIKE :query OR CONCAT(m.prenom, \' \', m.nom) LIKE :query)')
+            $qb->andWhere('(m.nom LIKE :query OR m.prenom LIKE :query)')
                ->setParameter('query', '%' . $search . '%');
         }
 
