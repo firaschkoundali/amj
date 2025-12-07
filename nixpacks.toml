@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ["php82", "composer"]
+
+[phases.install]
+cmds = [
+    "composer install --no-dev --optimize-autoloader --no-interaction",
+    "php bin/console cache:clear --env=prod --no-interaction",
+    "php bin/console cache:warmup --env=prod --no-interaction"
+]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t public"
+

@@ -1,9 +1,10 @@
 services:
   - type: web
     name: symfony-amj
-    env: php
-    buildCommand: composer install --no-dev --optimize-autoloader && php bin/console cache:clear --env=prod && php bin/console cache:warmup --env=prod
-    startCommand: php -S 0.0.0.0:$PORT -t public
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: php -S 0.0.0.0:8000 -t public
     envVars:
       - key: APP_ENV
         value: prod
