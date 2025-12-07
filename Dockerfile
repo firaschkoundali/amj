@@ -32,6 +32,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Note: Cache will be warmed up automatically on first request when APP_ENV=prod
 # We don't warmup during build because environment variables are not yet set
 
+# Create var directory if it doesn't exist (for cache, logs, etc.)
+RUN mkdir -p /var/www/html/var/cache /var/www/html/var/log
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
