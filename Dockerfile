@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -29,9 +29,8 @@ RUN echo "APP_ENV=prod" > .env && \
 # Install dependencies (skip scripts to avoid cache:clear during build)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Clear and warmup cache after installation
-RUN php bin/console cache:clear --env=prod --no-interaction || true && \
-    php bin/console cache:warmup --env=prod --no-interaction || true
+# Note: Cache will be warmed up automatically on first request when APP_ENV=prod
+# We don't warmup during build because environment variables are not yet set
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
@@ -41,6 +40,18 @@ RUN chown -R www-data:www-data /var/www/html \
 # Expose port (Render uses $PORT environment variable)
 EXPOSE 8000
 
+# Create entrypoint script
+RUN echo '#!/bin/sh\n\
+set -e\n\
+\n\
+# Clear and warmup cache on startup\n\
+php bin/console cache:clear --env=prod --no-interaction || true\n\
+php bin/console cache:warmup --env=prod --no-interaction || true\n\
+\n\
+# Start PHP built-in server\n\
+exec php -S 0.0.0.0:${PORT:-8000} -t public\n\
+' > /entrypoint.sh && chmod +x /entrypoint.sh
+
 # Start PHP built-in server (Render will set $PORT)
-CMD php -S 0.0.0.0:${PORT:-8000} -t public
+CMD ["/entrypoint.sh"]
 
